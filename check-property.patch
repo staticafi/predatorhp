@@ -1,0 +1,12 @@
+446,452c446,448
+< "$GCC_HOST"                                             \
+<     -fplugin="${GCC_PLUG}"                              \
+<     -fplugin-arg-libsl-args="$ARGS"                     \
+<     -o /dev/null -O0 -S -xc "$SRC_FILE" $CFLAGS 2>&1    \
+<     | tee "$TRACE"                                      \
+<     | parse_gcc_output
+< 
+---
+> CLANG_HOST=/var/tmp/xjasek/symbiotic/llvm-8.0.1/build/bin/clang
+> OPT_HOST=/var/tmp/xjasek/symbiotic/llvm-8.0.1/build/bin/opt
+> LD_LIBRARY_PATH="$(dirname $(readlink -f $SELF)):$LD_LIBRARY_PATH" $(dirname $(readlink -f $SELF))/slllvm $SRC_FILE $CFLAGS 2>&1 | parse_gcc_output

@@ -1,0 +1,8 @@
+29c29
+<     CLANG_HOST="/usr/local/bin/clang"
+---
+>     CLANG_HOST="/var/tmp/xjasek/symbiotic/llvm-8.0.1/build/bin/clang"
+40c40
+<     OPT_HOST="/usr/local/bin/opt"
+---
+>     OPT_HOST="/var/tmp/xjasek/symbiotic/llvm-8.0.1/build/bin/opt"
