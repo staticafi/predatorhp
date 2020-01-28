@@ -1,12 +1,31 @@
-446,452c446,448
+446,453c446,449
+< if [ -z $ENABLE_LLVM ]; then
 < "$GCC_HOST"                                             \
 <     -fplugin="${GCC_PLUG}"                              \
 <     -fplugin-arg-libsl-args="$ARGS"                     \
 <     -o /dev/null -O0 -S -xc "$SRC_FILE" $CFLAGS 2>&1    \
 <     | tee "$TRACE"                                      \
 <     | parse_gcc_output
-< 
+< else
 ---
 > CLANG_HOST=/var/tmp/xjasek/symbiotic/llvm-8.0.1/build/bin/clang
 > OPT_HOST=/var/tmp/xjasek/symbiotic/llvm-8.0.1/build/bin/opt
-> LD_LIBRARY_PATH="$(dirname $(readlink -f $SELF)):$LD_LIBRARY_PATH" $(dirname $(readlink -f $SELF))/slllvm $SRC_FILE $CFLAGS 2>&1 | parse_gcc_output
+> PASSES_LIB=$(dirname $(readlink -f $SELF))/libpasses.so
+> SL_PLUG=$(dirname $(readlink -f $SELF))/libsl.so
+455,462c451,457
+<   -Xclang -fsanitize-address-use-after-scope "$@" \
+<   | "$OPT_HOST" -lowerswitch                      \
+<   -load "$PASSES_LIB" -global-vars                \
+<   -load "$SL_PLUG" -sl -args="$ARGS"              \
+<   -o /dev/null 2>&1                               \
+<   | tee "$TRACE"                                  \
+<   | parse_gcc_output
+< fi
+---
+>     -Xclang -fsanitize-address-use-after-scope "$SRC_FILE" $CFLAGS \
+>     | "$OPT_HOST" -lowerswitch                      \
+>     -load "$PASSES_LIB" -global-vars                \
+>     -load "$SL_PLUG" -sl -args="$ARGS"              \
+>     -o /dev/null 2>&1                               \
+>     | tee "$TRACE"                                  \
+>     | parse_gcc_output

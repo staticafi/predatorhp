@@ -8,7 +8,7 @@ NCPU="$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
 
 # git repository checkout
 cloneAndMerge() {
-    BASEBRANCH=post-svcomp
+    BASEBRANCH=post-svcomp3
     DIR=$1
     BRANCH=$2
     (
@@ -44,11 +44,13 @@ cd_make () {
   pushd passes-src/passes_build
   make
   popd
-  cp -r passes-src/passes_build .
-  cp passes_build/libpasses.so sl_build/
+
   pushd sl_build
   patch check-property.sh $topdir/check-property.patch
   popd
+
+  cp -r passes-src/passes_build .
+  cp passes_build/libpasses.so sl_build/
 
   pushd build-aux
   echo "patching cclib"
